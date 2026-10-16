@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#121218"/>
+  <rect x="0.5" y="0.5" width="799" height="999" fill="none" stroke="#3d6bff" stroke-opacity="0.25"/>
+  <g stroke="#3d6bff" stroke-opacity="0.18" stroke-width="1">
+    <line x1="0" y1="250" x2="800" y2="250"/>
+    <line x1="0" y1="500" x2="800" y2="500"/>
+    <line x1="0" y1="750" x2="800" y2="750"/>
+    <line x1="200" y1="0" x2="200" y2="1000"/>
+    <line x1="400" y1="0" x2="400" y2="1000"/>
+    <line x1="600" y1="0" x2="600" y2="1000"/>
+  </g>
+  <circle cx="400" cy="460" r="46" fill="none" stroke="#3d6bff" stroke-width="2"/>
+  <path d="M378 460h44M400 438v44" stroke="#3d6bff" stroke-width="2"/>
+  <text x="400" y="560" text-anchor="middle" fill="#6e93ff" font-family="monospace" font-size="18" letter-spacing="2">PREVIEW IMAGE</text>
+</svg>

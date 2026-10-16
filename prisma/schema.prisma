@@ -1,0 +1,151 @@
+// A single Postgres database, used identically for local development and
+// production - no SQLite, no separate pooled/direct URLs. See
+// THE LEX CONCEPT project for why this is the deliberate choice here too.
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+// A portfolio piece. `type` is the top-level filter on the public site:
+// "dev" | "design" | "data". `subCategory` only applies to type "design"
+// (one of CATEGORY_VALUES in src/lib/categories.js) and powers the second
+// row of filter buttons that appears when "Graphic Design" is selected.
+// `techStack` and `liveUrl`/`githubUrl` are mainly used by "dev" and
+// "data" works (tech tags + live demo / repo links, like the reference
+// site); `images` holds extra screenshots/mockups shown in the gallery
+// for any type.
+model Work {
+  id          Int      @id @default(autoincrement())
+  title       String
+  type        String // dev | design | data
+  subCategory String? // design sub-category, only when type = "design"
+  description String?
+  techStack   String? // comma-separated tags, e.g. "Next.js,Prisma,PostgreSQL"
+  liveUrl     String?
+  githubUrl   String?
+  imageUrl    String
+  thumbUrl    String
+  blurDataUrl String?
+  status      String   @default("live") // live | draft
+  views       Int      @default(0)
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  // Optional case-study breakdown shown in the lightbox under the
+  // description - any of the three may be left empty, in which case that
+  // row (or the whole block, if all three are empty) is simply omitted.
+  problem     String?
+  approach    String?
+  result      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  images      WorkImage[]
+
+  @@index([status, type])
+  @@index([createdAt])
+}
+
+model WorkImage {
+  id          Int      @id @default(autoincrement())
+  workId      Int
+  work        Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+  imageUrl    String
+  blurDataUrl String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([workId])
+}
+
+// A labeled skill under a category (Languages, Frameworks, Design Tools,
+// Data Tools, etc.) - admin can add/reorder/remove these freely, no fixed
+// schema for what categories exist.
+model Skill {
+  id       Int    @id @default(autoincrement())
+  category String // e.g. "Languages", "Frameworks", "Design Tools", "Data & Analytics"
+  name     String
+  order    Int    @default(0)
+}
+
+// One row (id: 1) holding every editable piece of text on the public
+// site's Hero, About, Contact sections.
+model SiteContent {
+  id Int @id @default(1)
+
+  heroName        String @default("Fasinu David Omotayo")
+  heroRoles       String @default("Software Developer,Graphic Designer,Data Analyst") // comma-separated, rotates in the hero
+  heroTagline     String @default("I build, design, and make sense of things.")
+  heroSubtext     String @default("I write production software, design brand identities, and turn raw data into decisions worth acting on — all three, done properly.")
+  heroStatProjects Int   @default(20)
+  heroStatYears    Int   @default(2)
+  heroStatClients  Int   @default(10)
+  cvUrl           String? // link to a hosted CV/resume PDF; the hero's "Download CV" button is hidden when this is empty
+  logoUrl         String? // uploaded logo image shown in the nav; falls back to an initials monogram when empty
+  heroPhotoUrl    String? // uploaded hero portrait photo; falls back to an inline illustration when empty
+  heroPhotoBlurDataUrl String?
+
+  aboutHeadingLine1 String @default("The short version:")
+  aboutHeadingLine2 String @default("builder, designer, analyst.")
+  aboutParagraph1   String @default("I'm Fasinu David Omotayo — a software developer, graphic designer, and data analyst who likes working across all three rather than picking one.")
+  aboutParagraph2   String @default("Whichever hat I'm wearing, the approach is the same: understand the problem fully before touching code, a design tool, or a dataset.")
+  aboutImageUrl         String?
+  aboutImageBlurDataUrl String?
+  aboutArtImageUrl         String?
+  aboutArtImageBlurDataUrl String?
+
+  contactHeadingLine1 String @default("Let's work")
+  contactHeadingLine2 String @default("together.")
+  contactSubtext      String @default("Open to software, design, and data projects. Fill out the form or reach out directly.")
+  contactEmail        String @default("hello@fasinudavid.com")
+
+  githubUrl    String?
+  linkedinUrl  String?
+  instagramUrl String?
+  twitterUrl   String?
+  whatsappUrl  String? // stored as digits-only (country code + number), see /api/content
+
+  updatedAt DateTime @updatedAt
+}
+
+// A client/collaborator quote shown in the Testimonials section - admin can
+// add/edit/reorder/remove these freely, same simple pattern as Skill.
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  name      String
+  role      String
+  quote     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactMessage {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String
+  projectType String
+  message     String
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Activity {
+  id        Int      @id @default(autoincrement())
+  type      String // page_view | filter_click | upload | edit | delete | login | message
+  message   String
+  meta      String?
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt])
+}
