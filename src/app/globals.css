@@ -137,7 +137,7 @@ nav.site-nav {
 .hero-social a { width: 36px; height: 36px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; border-radius: var(--radius); transition: all .2s ease; }
 .hero-social a:hover { color: var(--accent); border-color: var(--accent); }
 
-.hero-portrait { position: relative; max-width: 260px; margin-left: auto; }
+.hero-portrait { position: relative; width: 100%; max-width: 380px; margin-left: auto; }
 .portrait-frame { position: relative; aspect-ratio: 4/5; background: var(--card-ph); overflow: hidden; border-radius: var(--radius); }
 .portrait-frame img, .portrait-frame svg { width: 100%; height: 100%; object-fit: cover; }
 .portrait-frame::before { content: ''; position: absolute; inset: -10px; border: 1px solid var(--border); border-radius: calc(var(--radius) + 2px); pointer-events: none; z-index: 1; }
@@ -320,7 +320,7 @@ footer.site-footer { padding: 26px 0; border-top: 1px solid var(--border); paddi
   .nav-cta-desktop { display: none; }
   .nav-menu-btn { display: flex; }
   .hero-inner { grid-template-columns: 1fr; }
-  .hero-portrait { max-width: 220px; margin-left: 0; order: -1; }
+  .hero-portrait { max-width: 300px; margin-left: 0; order: -1; }
   .hero-stats { grid-template-columns: repeat(2, 1fr); max-width: none; }
   .about, .contact { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
