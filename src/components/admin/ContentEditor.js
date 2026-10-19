@@ -22,6 +22,8 @@ async function uploadDocument(file) {
 
 export default function ContentEditor({ initialContent }) {
   const [form, setForm] = useState(initialContent);
+  const [heroFile, setHeroFile] = useState(null);
+  const [heroPreview, setHeroPreview] = useState(initialContent.heroPhotoUrl || '');
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(initialContent.logoUrl || '');
   const [cvFile, setCvFile] = useState(null);
@@ -41,6 +43,19 @@ export default function ContentEditor({ initialContent }) {
   function showToast(msg) {
     setToast(msg);
     setTimeout(() => setToast(''), 2400);
+  }
+
+  function onHeroFile(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setHeroFile(file);
+    setHeroPreview(URL.createObjectURL(file));
+  }
+
+  function removeHeroPhoto() {
+    setHeroFile(null);
+    setHeroPreview('');
+    set('heroPhotoUrl', '');
   }
 
   function onLogoFile(e) {
@@ -88,6 +103,7 @@ export default function ContentEditor({ initialContent }) {
         heroStatProjects: form.heroStatProjects,
         heroStatYears: form.heroStatYears,
         heroStatClients: form.heroStatClients,
+        heroPhotoUrl: form.heroPhotoUrl || '', // overwritten below if a new photo was picked
         cvUrl: form.cvUrl || '', // overwritten below if a new PDF was picked
         aboutHeadingLine1: form.aboutHeadingLine1,
         aboutHeadingLine2: form.aboutHeadingLine2,
@@ -104,6 +120,10 @@ export default function ContentEditor({ initialContent }) {
         whatsappUrl: form.whatsappUrl || '',
       };
 
+      if (heroFile) {
+        const uploaded = await uploadFile(heroFile);
+        payload.heroPhotoUrl = uploaded.imageUrl;
+      }
       if (logoFile) {
         const uploaded = await uploadFile(logoFile);
         payload.logoUrl = uploaded.imageUrl;
@@ -135,6 +155,7 @@ export default function ContentEditor({ initialContent }) {
         return;
       }
       setForm(data);
+      setHeroFile(null);
       setLogoFile(null);
       setAboutFile(null);
       setArtFile(null);
@@ -181,6 +202,16 @@ export default function ContentEditor({ initialContent }) {
           <label>Clients stat</label>
           <input type="number" value={form.heroStatClients} onChange={(e) => set('heroStatClients', e.target.value)} />
         </div>
+      </div>
+      <div className="mgroup">
+        <label>Hero photo (your portrait in the hero section — shows an illustration when empty)</label>
+        {heroPreview && <img className="upload-preview" src={heroPreview} alt="" />}
+        <input type="file" accept="image/*" onChange={onHeroFile} />
+        {heroPreview && (
+          <button type="button" className="field-hint" style={{ background: 'none', border: 0, padding: 0, textDecoration: 'underline', cursor: 'pointer', textAlign: 'left' }} onClick={removeHeroPhoto}>
+            Remove hero photo
+          </button>
+        )}
       </div>
       <div className="mgroup">
         <label>CV / résumé (PDF, uploaded from your computer)</label>

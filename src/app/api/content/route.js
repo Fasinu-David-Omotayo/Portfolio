@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 
 const EDITABLE_FIELDS = [
   'heroName', 'heroRoles', 'heroTagline', 'heroSubtext',
-  'heroStatProjects', 'heroStatYears', 'heroStatClients', 'cvUrl', 'logoUrl',
+  'heroStatProjects', 'heroStatYears', 'heroStatClients', 'heroPhotoUrl', 'cvUrl', 'logoUrl',
   'aboutHeadingLine1', 'aboutHeadingLine2', 'aboutParagraph1', 'aboutParagraph2',
   'aboutImageUrl', 'aboutImageBlurDataUrl', 'aboutArtImageUrl', 'aboutArtImageBlurDataUrl',
   'contactHeadingLine1', 'contactHeadingLine2', 'contactSubtext', 'contactEmail',
@@ -19,7 +19,7 @@ const EDITABLE_FIELDS = [
 const NUMBER_FIELDS = ['heroStatProjects', 'heroStatYears', 'heroStatClients'];
 // Hand-typed external links only - these must be full http(s):// URLs.
 const URL_FIELDS = ['githubUrl', 'linkedinUrl', 'instagramUrl', 'twitterUrl'];
-const IMAGE_FIELDS = ['aboutImageUrl', 'aboutArtImageUrl', 'logoUrl'];
+const IMAGE_FIELDS = ['heroPhotoUrl', 'aboutImageUrl', 'aboutArtImageUrl', 'logoUrl'];
 // Comes from our own upload pipeline, not hand-typed - locally that's a
 // relative /uploads/... path, not a full URL (see isValidUploadUrl).
 const UPLOAD_FIELDS = ['cvUrl'];
