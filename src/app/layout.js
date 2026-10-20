@@ -1,9 +1,28 @@
 import './globals.css';
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://fasinu-david-omotayo.vercel.app';
+const TITLE = 'Fasinu David Omotayo — Software Developer, Designer & Data Analyst';
+const DESCRIPTION =
+  'Portfolio of Fasinu David Omotayo — software development, graphic design, and data analysis.';
+
 export const metadata = {
-  title: 'Fasinu David Omotayo — Software Developer, Designer & Data Analyst',
-  description:
-    'Portfolio of Fasinu David Omotayo — software development, graphic design, and data analysis.',
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    type: 'website',
+    url: '/',
+    siteName: 'Fasinu David Omotayo',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Fasinu David Omotayo — Portfolio' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ['/og-image.png'],
+  },
 };
 
 export default function RootLayout({ children }) {
