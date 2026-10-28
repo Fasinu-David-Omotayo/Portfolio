@@ -3,6 +3,15 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { safeJson } from '@/lib/apiClient';
 
+// Shown text only - the real link (with https://) stays on the href so it
+// still opens correctly. Strips the protocol and any trailing slash.
+function displayUrl(url) {
+  return String(url || '')
+    .replace(/^https?:\/\//i, '')
+    .replace(/\/+$/, '');
+}
+
+
 const PROJECT_TYPES = ['Software Development', 'Graphic Design', 'Data Analysis', 'Something else'];
 
 export default function Contact({ content }) {
@@ -77,7 +86,7 @@ export default function Contact({ content }) {
         {socials.map((s) => (
           <div className="contact-detail" key={s.label}>
             <label>{s.label}</label>
-            <a href={s.href} target="_blank" rel="noopener noreferrer">{s.href}</a>
+            <a href={s.href} target="_blank" rel="noopener noreferrer">{displayUrl(s.href)}</a>
           </div>
         ))}
       </motion.div>
