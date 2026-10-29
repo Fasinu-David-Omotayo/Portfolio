@@ -12,6 +12,7 @@ import Testimonials from '@/components/Testimonials';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import Assistant from '@/components/Assistant';
+import TabLife from '@/components/TabLife';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,6 +31,7 @@ export default async function HomePage() {
   return (
     <>
       <PageViewTracker />
+      <TabLife />
       <CustomCursor />
       <ScrollProgress />
       <Nav name={content.heroName} logoUrl={content.logoUrl} />
