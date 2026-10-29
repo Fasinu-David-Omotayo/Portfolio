@@ -11,6 +11,7 @@ import Skills from '@/components/Skills';
 import Testimonials from '@/components/Testimonials';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
+import Assistant from '@/components/Assistant';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,6 +40,7 @@ export default async function HomePage() {
       <Testimonials testimonials={testimonials} />
       <Contact content={content} />
       <Footer name={content.heroName} />
+      <Assistant content={content} skills={skills} />
     </>
   );
 }

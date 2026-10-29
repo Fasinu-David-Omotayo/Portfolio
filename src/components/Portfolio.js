@@ -118,6 +118,19 @@ export default function Portfolio({ works }) {
     trackFilter(value);
   }
 
+  // Lets the chat assistant jump straight to a category.
+  useEffect(() => {
+    function onFilter(e) {
+      const v = e.detail;
+      if (['all', 'dev', 'design', 'data'].includes(v)) {
+        setTypeFilter(v);
+        setSubFilter('all');
+      }
+    }
+    window.addEventListener('portfolio:filter', onFilter);
+    return () => window.removeEventListener('portfolio:filter', onFilter);
+  }, []);
+
   function selectSub(value) {
     setSubFilter(value);
     trackFilter(value === 'all' ? 'design' : value);
