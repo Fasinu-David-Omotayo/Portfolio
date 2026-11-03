@@ -36,3 +36,11 @@ export function isSafeHttpUrl(value) {
     return false;
   }
 }
+
+// The CV may be an uploaded file (see isValidUploadUrl) or a PDF placed in
+// the site's own public folder, e.g. /David-Fasinu-CV.pdf. Only a plain
+// top-level .pdf file name is accepted for the second form.
+export function isValidCvUrl(url) {
+  if (typeof url !== 'string') return false;
+  return isValidUploadUrl(url) || /^\/[A-Za-z0-9._-]+\.pdf$/i.test(url);
+}

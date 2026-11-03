@@ -34,14 +34,14 @@ export default async function HomePage() {
       <TabLife />
       <CustomCursor />
       <ScrollProgress />
-      <Nav name={content.heroName} logoUrl={content.logoUrl} />
+      <Nav name={content.heroName} logoUrl={content.logoUrl} hasReviews={testimonials.length > 0} />
       <Hero content={content} skills={skills} />
       <Portfolio works={works} />
       <About content={content} />
       <Skills skills={skills} />
       <Testimonials testimonials={testimonials} />
-      <Contact content={content} />
-      <Footer name={content.heroName} />
+      <Contact content={content} number={testimonials.length > 0 ? '05' : '04'} />
+      <Footer name={content.heroName} content={content} />
       <Assistant content={content} skills={skills} />
     </>
   );

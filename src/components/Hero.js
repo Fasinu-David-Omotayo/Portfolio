@@ -78,7 +78,7 @@ function useReserveRoleWidth(roles, wrapRef, textRef) {
 }
 
 export default function Hero({ content, skills = [] }) {
-  const roles = (content?.heroRoles || 'Software Developer,Graphic Designer,Data Analyst')
+  const roles = (content?.heroRoles || 'Software Developer,Data Analyst,Graphic Designer')
     .split(',')
     .map((r) => r.trim())
     .filter(Boolean);
@@ -86,15 +86,11 @@ export default function Hero({ content, skills = [] }) {
   const roleWrapRef = useRef(null);
   const roleTextRef = useRef(null);
   useReserveRoleWidth(roles, roleWrapRef, roleTextRef);
+  const stats = [1, 2, 3, 4]
+    .map((i) => ({ num: content?.[`heroStat${i}Num`], lbl: content?.[`heroStat${i}Label`] }))
+    .filter((s) => s.num && s.lbl);
 
-  const stats = [
-    { num: `${content?.heroStatProjects ?? 20}+`, lbl: 'projects shipped' },
-    { num: `${content?.heroStatYears ?? 2}+`, lbl: 'years building' },
-    { num: `${content?.heroStatClients ?? 10}+`, lbl: 'clients served' },
-    { num: `${roles.length || 3}`, lbl: 'disciplines, one standard' },
-  ];
-
-  const techNames = skills.map((s) => s.name).filter(Boolean);
+  const techNames = [...new Set(skills.map((s) => (s.name || '').trim()).filter(Boolean))];
   const socials = [
     content?.githubUrl && { label: 'GitHub', href: content.githubUrl, icon: 'github' },
     content?.linkedinUrl && { label: 'LinkedIn', href: content.linkedinUrl, icon: 'linkedin' },
@@ -116,7 +112,7 @@ export default function Hero({ content, skills = [] }) {
 
           <p className="hero-sub">
             {content?.heroSubtext ||
-              "I write production software, design brand identities, and turn raw data into decisions worth acting on — three disciplines, one standard: done properly, not performed."}
+              "I build responsive web products, design brand identities, and turn raw data into clear decisions. Open to entry-level and remote roles."}
           </p>
 
           <div className="hero-cta">
@@ -124,7 +120,7 @@ export default function Hero({ content, skills = [] }) {
             <a href="#contact" className="btn-ghost">Get In Touch</a>
             {content?.cvUrl && (
               <a href={content.cvUrl} className="btn-ghost" target="_blank" rel="noopener noreferrer" download>
-                ↓ Download CV
+                Download CV
               </a>
             )}
           </div>
@@ -132,7 +128,7 @@ export default function Hero({ content, skills = [] }) {
           {socials.length > 0 && (
             <div className="hero-social">
               {socials.map((s) => (
-                <a key={s.label} href={s.href} aria-label={s.label} target={s.icon === 'email' ? undefined : '_blank'} rel="noopener noreferrer">
+                <a key={s.label} href={s.href} className="social-link" aria-label={s.label} target={s.icon === 'email' ? undefined : '_blank'} rel="noopener noreferrer">
                   {s.icon === 'github' && (
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
                   )}
@@ -142,6 +138,7 @@ export default function Hero({ content, skills = [] }) {
                   {s.icon === 'email' && (
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m3 7 9 6 9-6"/></svg>
                   )}
+                  <span>{s.label}</span>
                 </a>
               ))}
             </div>
@@ -164,7 +161,7 @@ export default function Hero({ content, skills = [] }) {
         </div>
       </div>
 
-      <div className="container">
+      {stats.length > 0 && <div className="container">
         <div className="hero-stats">
           {stats.map((s) => (
             <div className="hero-stat" key={s.lbl}>
@@ -173,17 +170,17 @@ export default function Hero({ content, skills = [] }) {
             </div>
           ))}
         </div>
-      </div>
+      </div>}
 
       {techNames.length > 0 && (
         <div className="tech-ticker">
           <div className="tech-ticker-track">
             {[0, 1].map((copy) => (
               <div className="tech-ticker-set" key={copy} aria-hidden={copy === 1}>
-                {techNames.map((name, i) => (
-                  <span key={`${copy}-${name}-${i}`}>
+                {techNames.map((name) => (
+                  <span key={`${copy}-${name}`}>
                     {name}
-                    <span className="dot-sep">·</span>
+                    <span className="dot-sep">&middot;</span>
                   </span>
                 ))}
               </div>

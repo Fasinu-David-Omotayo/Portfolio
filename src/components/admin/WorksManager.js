@@ -28,6 +28,10 @@ const EMPTY_FORM = {
   problem: '',
   approach: '',
   result: '',
+  kind: '',
+  kindNote: '',
+  extraUrl: '',
+  extraLabel: '',
   images: [],
 };
 
@@ -83,6 +87,10 @@ export default function WorksManager({ initialWorks }) {
       problem: work.problem || '',
       approach: work.approach || '',
       result: work.result || '',
+      kind: work.kind || '',
+      kindNote: work.kindNote || '',
+      extraUrl: work.extraUrl || '',
+      extraLabel: work.extraLabel || '',
       images: work.images || [],
     });
     setCoverFile(null);
@@ -131,6 +139,10 @@ export default function WorksManager({ initialWorks }) {
         problem: form.problem,
         approach: form.approach,
         result: form.result,
+        kind: form.kind,
+        kindNote: form.kindNote,
+        extraUrl: form.extraUrl,
+        extraLabel: form.extraLabel,
         ...imageFields,
       };
 
@@ -164,7 +176,7 @@ export default function WorksManager({ initialWorks }) {
         setWorks((list) => [{ ...data, images: [] }, ...list]);
         setForm((f) => ({ ...f, id: data.id, imageUrl: data.imageUrl, thumbUrl: data.thumbUrl }));
         setCoverFile(null);
-        showToast('Work added — add more images below, then close when you’re done.');
+        showToast('Work added - add more images below, then close when you’re done.');
       }
     } catch (err) {
       setError(err.message || 'Something went wrong.');
@@ -294,7 +306,7 @@ export default function WorksManager({ initialWorks }) {
           </table>
         </div>
         {works.length === 0 && (
-          <div className="empty-panel">No works yet — add your first one above.</div>
+          <div className="empty-panel">No works yet - add your first one above.</div>
         )}
       </div>
 
@@ -311,14 +323,14 @@ export default function WorksManager({ initialWorks }) {
 
             {!form.id && (
               <p className="field-hint" style={{ marginBottom: 16 }}>
-                Save this work first — once it&apos;s created, you&apos;ll be able to add extra gallery
+                Save this work first - once it&apos;s created, you&apos;ll be able to add extra gallery
                 images (screenshots, mockups, other angles) right here in this same window.
               </p>
             )}
 
             {form.id && (
               <div className="mgroup">
-                <label>Additional Images (screenshots, mockups, other angles… — the gallery shown in the lightbox, e.g. for Data Analysis projects)</label>
+                <label>Additional Images (screenshots, mockups, other angles… - the gallery shown in the lightbox, e.g. for Data Analysis projects)</label>
                 {form.images.length > 0 && (
                   <div className="sub-image-grid">
                     {form.images.map((img) => (
@@ -343,7 +355,7 @@ export default function WorksManager({ initialWorks }) {
                   onChange={onSubImageChange}
                   disabled={!!uploadingSub}
                 />
-                <p className="field-hint">Select as many images as you like at once — they&apos;ll be added one by one.</p>
+                <p className="field-hint">Select as many images as you like at once - they&apos;ll be added one by one.</p>
                 {uploadingSub && (
                   <p className="inline-msg">Uploading image {uploadingSub.done + 1} of {uploadingSub.total}…</p>
                 )}
@@ -429,6 +441,50 @@ export default function WorksManager({ initialWorks }) {
 
             <div className="mgroup-row">
               <div className="mgroup" style={{ flex: 1 }}>
+                <label>Extra link label (optional, e.g. Watch demo, Download workbook)</label>
+                <input
+                  value={form.extraLabel}
+                  onChange={(e) => setForm((f) => ({ ...f, extraLabel: e.target.value }))}
+                  maxLength={40}
+                  placeholder="Watch demo"
+                />
+              </div>
+              <div className="mgroup" style={{ flex: 1 }}>
+                <label>Extra link URL</label>
+                <input
+                  value={form.extraUrl}
+                  onChange={(e) => setForm((f) => ({ ...f, extraUrl: e.target.value }))}
+                  placeholder="https://..."
+                />
+              </div>
+            </div>
+
+            <div className="mgroup-row">
+              <div className="mgroup" style={{ flex: 1 }}>
+                <label>What kind of work is this?</label>
+                <select
+                  value={form.kind}
+                  onChange={(e) => setForm((f) => ({ ...f, kind: e.target.value }))}
+                >
+                  <option value="">Not labelled</option>
+                  <option value="client">Client work</option>
+                  <option value="personal">Personal project</option>
+                  <option value="concept">Concept / brand study (not affiliated)</option>
+                </select>
+              </div>
+              <div className="mgroup" style={{ flex: 1 }}>
+                <label>Label note (optional, replaces the default concept notice)</label>
+                <input
+                  value={form.kindNote}
+                  onChange={(e) => setForm((f) => ({ ...f, kindNote: e.target.value }))}
+                  maxLength={300}
+                  placeholder="Concept brand study, not affiliated with Porsche."
+                />
+              </div>
+            </div>
+
+            <div className="mgroup-row">
+              <div className="mgroup" style={{ flex: 1 }}>
                 <label>Status</label>
                 <select
                   value={form.status}
@@ -450,25 +506,25 @@ export default function WorksManager({ initialWorks }) {
             </div>
 
             <div className="mgroup">
-              <label>Case study — Problem (optional; shown in the lightbox below the description)</label>
+              <label>The brief (optional; shown in the project details)</label>
               <textarea
                 value={form.problem}
                 onChange={(e) => setForm((f) => ({ ...f, problem: e.target.value }))}
                 maxLength={1000}
-                placeholder="What problem or brief was this work solving?"
+                placeholder="Who was it for and what did they need?"
               />
             </div>
             <div className="mgroup">
-              <label>Case study — Approach (optional)</label>
+              <label>What I made (optional)</label>
               <textarea
                 value={form.approach}
                 onChange={(e) => setForm((f) => ({ ...f, approach: e.target.value }))}
                 maxLength={1000}
-                placeholder="How did you go about solving it?"
+                placeholder="What you built or designed, and how."
               />
             </div>
             <div className="mgroup">
-              <label>Case study — Result (optional)</label>
+              <label>Result (optional)</label>
               <textarea
                 value={form.result}
                 onChange={(e) => setForm((f) => ({ ...f, result: e.target.value }))}

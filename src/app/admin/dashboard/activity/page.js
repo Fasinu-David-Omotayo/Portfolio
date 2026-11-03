@@ -9,7 +9,7 @@ export default async function ActivityPage() {
   return (
     <>
       <h1 className="page-title">Activity</h1>
-      <p className="page-sub">Everything happening on the site — uploads, edits, visitor behavior.</p>
+      <p className="page-sub">Everything happening on the site - uploads, edits, visitor behavior.</p>
       <ActivityFeed initialActivity={activity} />
     </>
   );

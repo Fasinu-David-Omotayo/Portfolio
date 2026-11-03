@@ -8,9 +8,9 @@ export default function Testimonials({ testimonials = [] }) {
     <section className="testimonials" id="testimonials">
       <div className="container">
         <div className="section-head">
-          <span className="section-num">04 — What people say</span>
+          <span className="section-num">04 / What people say</span>
           <h2 className="section-title">Clients and collaborators</h2>
-          <p>A few words from people I&apos;ve built, designed, or analyzed something for.</p>
+          <p>A few words from people I&apos;ve worked with.</p>
         </div>
 
         <div className="testimonial-grid">

@@ -100,15 +100,17 @@ export default function ContentEditor({ initialContent }) {
         heroRoles: form.heroRoles,
         heroTagline: form.heroTagline,
         heroSubtext: form.heroSubtext,
-        heroStatProjects: form.heroStatProjects,
-        heroStatYears: form.heroStatYears,
-        heroStatClients: form.heroStatClients,
+        heroStat1Num: form.heroStat1Num, heroStat1Label: form.heroStat1Label,
+        heroStat2Num: form.heroStat2Num, heroStat2Label: form.heroStat2Label,
+        heroStat3Num: form.heroStat3Num, heroStat3Label: form.heroStat3Label,
+        heroStat4Num: form.heroStat4Num, heroStat4Label: form.heroStat4Label,
         heroPhotoUrl: form.heroPhotoUrl || '', // overwritten below if a new photo was picked
         cvUrl: form.cvUrl || '', // overwritten below if a new PDF was picked
         aboutHeadingLine1: form.aboutHeadingLine1,
         aboutHeadingLine2: form.aboutHeadingLine2,
         aboutParagraph1: form.aboutParagraph1,
         aboutParagraph2: form.aboutParagraph2,
+        aboutParagraph3: form.aboutParagraph3,
         contactHeadingLine1: form.contactHeadingLine1,
         contactHeadingLine2: form.contactHeadingLine2,
         contactSubtext: form.contactSubtext,
@@ -178,7 +180,7 @@ export default function ContentEditor({ initialContent }) {
         <input value={form.heroName} onChange={(e) => set('heroName', e.target.value)} maxLength={300} />
       </div>
       <div className="mgroup">
-        <label>Roles (comma-separated, rotates in the hero)</label>
+        <label>Roles (comma-separated, typed out in the hero after "I'm a")</label>
         <input value={form.heroRoles} onChange={(e) => set('heroRoles', e.target.value)} maxLength={300} />
       </div>
       <div className="mgroup">
@@ -189,22 +191,49 @@ export default function ContentEditor({ initialContent }) {
         <label>Subtext</label>
         <textarea value={form.heroSubtext} onChange={(e) => set('heroSubtext', e.target.value)} maxLength={2000} />
       </div>
+      <p className="field-hint">Stat tiles under the hero. Only put numbers here that you can prove from your CV or your work.</p>
       <div className="mgroup-row">
         <div className="mgroup" style={{ flex: 1 }}>
-          <label>Projects stat</label>
-          <input type="number" value={form.heroStatProjects} onChange={(e) => set('heroStatProjects', e.target.value)} />
+          <label>Stat 1 value</label>
+          <input value={form.heroStat1Num} onChange={(e) => set('heroStat1Num', e.target.value)} maxLength={40} />
         </div>
-        <div className="mgroup" style={{ flex: 1 }}>
-          <label>Years stat</label>
-          <input type="number" value={form.heroStatYears} onChange={(e) => set('heroStatYears', e.target.value)} />
+        <div className="mgroup" style={{ flex: 2 }}>
+          <label>Stat 1 label</label>
+          <input value={form.heroStat1Label} onChange={(e) => set('heroStat1Label', e.target.value)} maxLength={80} />
         </div>
+      </div>
+      <div className="mgroup-row">
         <div className="mgroup" style={{ flex: 1 }}>
-          <label>Clients stat</label>
-          <input type="number" value={form.heroStatClients} onChange={(e) => set('heroStatClients', e.target.value)} />
+          <label>Stat 2 value</label>
+          <input value={form.heroStat2Num} onChange={(e) => set('heroStat2Num', e.target.value)} maxLength={40} />
+        </div>
+        <div className="mgroup" style={{ flex: 2 }}>
+          <label>Stat 2 label</label>
+          <input value={form.heroStat2Label} onChange={(e) => set('heroStat2Label', e.target.value)} maxLength={80} />
+        </div>
+      </div>
+      <div className="mgroup-row">
+        <div className="mgroup" style={{ flex: 1 }}>
+          <label>Stat 3 value</label>
+          <input value={form.heroStat3Num} onChange={(e) => set('heroStat3Num', e.target.value)} maxLength={40} />
+        </div>
+        <div className="mgroup" style={{ flex: 2 }}>
+          <label>Stat 3 label</label>
+          <input value={form.heroStat3Label} onChange={(e) => set('heroStat3Label', e.target.value)} maxLength={80} />
+        </div>
+      </div>
+      <div className="mgroup-row">
+        <div className="mgroup" style={{ flex: 1 }}>
+          <label>Stat 4 value</label>
+          <input value={form.heroStat4Num} onChange={(e) => set('heroStat4Num', e.target.value)} maxLength={40} />
+        </div>
+        <div className="mgroup" style={{ flex: 2 }}>
+          <label>Stat 4 label</label>
+          <input value={form.heroStat4Label} onChange={(e) => set('heroStat4Label', e.target.value)} maxLength={80} />
         </div>
       </div>
       <div className="mgroup">
-        <label>Hero photo (your portrait in the hero section — shows an illustration when empty)</label>
+        <label>Hero photo (your portrait in the hero section - shows an illustration when empty)</label>
         {heroPreview && <img className="upload-preview" src={heroPreview} alt="" />}
         <input type="file" accept="image/*" onChange={onHeroFile} />
         {heroPreview && (
@@ -222,11 +251,13 @@ export default function ContentEditor({ initialContent }) {
         )}
         <input type="file" accept="application/pdf" onChange={onCvFile} />
         <p className="field-hint">
-          The hero&apos;s &quot;Download CV&quot; button is hidden automatically until you upload one here.
+          The hero&apos;s &quot;Download CV&quot; button is hidden automatically until a CV is set.
         </p>
+        <label style={{ marginTop: 12 }}>Or a CV link on your own site (for example /David-Fasinu-CV.pdf)</label>
+        <input value={form.cvUrl || ''} onChange={(e) => set('cvUrl', e.target.value)} placeholder="/David-Fasinu-CV.pdf" maxLength={300} />
       </div>
       <div className="mgroup">
-        <label>Logo (shown in the nav bar — falls back to initials when empty)</label>
+        <label>Logo (shown in the nav bar - falls back to initials when empty)</label>
         {logoPreview && <img className="upload-preview square" src={logoPreview} alt="" />}
         <input type="file" accept="image/*" onChange={onLogoFile} />
       </div>
@@ -261,6 +292,10 @@ export default function ContentEditor({ initialContent }) {
       <div className="mgroup">
         <label>Paragraph 2</label>
         <textarea value={form.aboutParagraph2} onChange={(e) => set('aboutParagraph2', e.target.value)} maxLength={2000} />
+      </div>
+      <div className="mgroup">
+        <label>Paragraph 3</label>
+        <textarea value={form.aboutParagraph3 || ''} onChange={(e) => set('aboutParagraph3', e.target.value)} maxLength={2000} />
       </div>
 
       <h3 style={{ margin: '32px 0 20px' }}>Contact & Socials</h3>

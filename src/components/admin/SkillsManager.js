@@ -57,7 +57,7 @@ export default function SkillsManager({ initialSkills }) {
   return (
     <div className="panel settings-panel">
       {categories.length === 0 ? (
-        <p style={{ color: 'var(--muted)', fontSize: 13.5 }}>No skills yet — add your first one below.</p>
+        <p style={{ color: 'var(--muted)', fontSize: 13.5 }}>No skills yet - add your first one below.</p>
       ) : (
         categories.map((cat) => (
           <div className="skills-admin-cat" key={cat}>

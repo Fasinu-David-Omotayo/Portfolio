@@ -62,7 +62,11 @@ function useMasonry(items) {
     if (typeof ResizeObserver !== 'undefined' && gridRef.current) {
       ro = new ResizeObserver(onResize);
       ro.observe(gridRef.current);
+      // Also watch each card, so text wrapping or fonts loading late
+      // re-flow the masonry instead of leaving gaps or overlaps.
+      for (const el of cardRefs.current.values()) if (el) ro.observe(el);
     }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(onResize).catch(() => {});
 
     return () => {
       window.removeEventListener('resize', onResize);
@@ -175,6 +179,13 @@ export default function Portfolio({ works }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active, gallery.length]);
 
+  const KIND_LABEL = { client: 'Client work', personal: 'Personal project', concept: 'Concept study' };
+  const kindNotice = (work) =>
+    work.kindNote ||
+    (work.kind === 'concept'
+      ? 'Concept brand study. Not affiliated with or endorsed by the brand shown.'
+      : '');
+
   const techTags = (work) =>
     (work.techStack || '')
       .split(',')
@@ -183,8 +194,8 @@ export default function Portfolio({ works }) {
 
   const caseStudy = active
     ? [
-        active.problem && { label: 'Problem', text: active.problem },
-        active.approach && { label: 'Approach', text: active.approach },
+        active.problem && { label: 'The brief', text: active.problem },
+        active.approach && { label: 'What I made', text: active.approach },
         active.result && { label: 'Result', text: active.result },
       ].filter(Boolean)
     : [];
@@ -193,9 +204,9 @@ export default function Portfolio({ works }) {
     <section className="portfolio" id="work">
       <div className="container">
       <div className="section-head">
-        <span className="section-num">01 — Selected work</span>
+        <span className="section-num">01 / Selected work</span>
         <h2 className="section-title">Things I&apos;ve built, designed, and analyzed</h2>
-        <p>A mix of shipped software, brand and design work, and data projects — filter by discipline below.</p>
+        <p>Software, design and data projects. Each one says whether it was client, personal or concept work.</p>
       </div>
 
       <div className="filters-primary">
@@ -239,7 +250,7 @@ export default function Portfolio({ works }) {
       </AnimatePresence>
 
       {filtered.length === 0 ? (
-        <div className="empty-state">No work in this category yet — check back soon.</div>
+        <div className="empty-state">No work in this category yet. Check back soon.</div>
       ) : (
         <div className="grid" ref={gridRef}>
           {filtered.map((work) => (
@@ -253,15 +264,16 @@ export default function Portfolio({ works }) {
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.5, ease: [0.2, 0.7, 0.3, 1] }}
             >
-              <div className="card-media" style={{ aspectRatio: work.type === 'design' ? '3/4' : '16/10' }}>
+              <div className="card-media" style={{ aspectRatio: work.type === 'design' ? '4/5' : '16/10' }}>
                 <img src={work.thumbUrl || work.imageUrl} alt={work.title} loading="lazy" decoding="async" />
                 <span className="card-type-badge">{TYPE_LABEL[work.type]}</span>
-                {work.images?.length > 0 && (
-                  <span className="card-image-count">+{work.images.length}</span>
-                )}
               </div>
               <div className="card-info">
                 <h4>{work.title}</h4>
+
+                {work.kind && KIND_LABEL[work.kind] && (
+                  <p className="card-kind">{KIND_LABEL[work.kind]}</p>
+                )}
 
                 {work.type === 'design' && work.subCategory && (
                   <p className="card-tag">{CATEGORY_LABELS[work.subCategory] || work.subCategory}</p>
@@ -275,7 +287,7 @@ export default function Portfolio({ works }) {
                   </div>
                 )}
 
-                {(work.liveUrl || work.githubUrl) && (
+                {(work.liveUrl || work.githubUrl || work.extraUrl) && (
                   <div className="card-links">
                     {work.liveUrl && (
                       <a href={work.liveUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
@@ -285,6 +297,11 @@ export default function Portfolio({ works }) {
                     {work.githubUrl && (
                       <a href={work.githubUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                         Source
+                      </a>
+                    )}
+                    {work.extraUrl && (
+                      <a href={work.extraUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                        {work.extraLabel || 'More'}
                       </a>
                     )}
                   </div>
@@ -314,7 +331,7 @@ export default function Portfolio({ works }) {
 
             <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
               <div className="lightbox-media">
-                <img src={gallery[slide]?.imageUrl} alt={active.title} />
+                <img src={gallery[slide]?.imageUrl} alt={`${active.title}, image ${slide + 1} of ${gallery.length}`} />
               </div>
 
               {gallery.length > 1 && (
@@ -326,9 +343,13 @@ export default function Portfolio({ works }) {
               )}
 
               <h3 className="lightbox-title">{active.title}</h3>
+              {active.kind && KIND_LABEL[active.kind] && (
+                <p className="lightbox-kind">{KIND_LABEL[active.kind]}</p>
+              )}
+              {kindNotice(active) && <p className="lightbox-notice">{kindNotice(active)}</p>}
               {active.description && <p className="lightbox-desc">{active.description}</p>}
 
-              {(techTags(active).length > 0 || active.liveUrl || active.githubUrl) && (
+              {(techTags(active).length > 0 || active.liveUrl || active.githubUrl || active.extraUrl) && (
                 <div className="lightbox-meta">
                   {techTags(active).map((t) => (
                     <span className="tech-tag" key={t} style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.25)' }}>{t}</span>
@@ -341,6 +362,11 @@ export default function Portfolio({ works }) {
                   {active.githubUrl && (
                     <a href={active.githubUrl} target="_blank" rel="noopener noreferrer">
                       View source
+                    </a>
+                  )}
+                  {active.extraUrl && (
+                    <a href={active.extraUrl} target="_blank" rel="noopener noreferrer">
+                      {active.extraLabel || 'More'}
                     </a>
                   )}
                 </div>

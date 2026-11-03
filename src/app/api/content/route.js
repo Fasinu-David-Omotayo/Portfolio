@@ -4,14 +4,16 @@ import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
 import { getSiteContent } from '@/lib/siteContent';
 import { isSameOrigin } from '@/lib/csrf';
-import { isValidImageUrl, isValidUploadUrl, isSafeHttpUrl } from '@/lib/validation';
+import { isValidImageUrl, isValidCvUrl, isSafeHttpUrl } from '@/lib/validation';
 
 export const dynamic = 'force-dynamic';
 
 const EDITABLE_FIELDS = [
-  'heroName', 'heroRoles', 'heroTagline', 'heroSubtext',
+  'heroName', 'heroRoles', 'heroHeadline', 'heroTagline', 'heroSubtext',
+  'heroStat1Num', 'heroStat1Label', 'heroStat2Num', 'heroStat2Label',
+  'heroStat3Num', 'heroStat3Label', 'heroStat4Num', 'heroStat4Label',
   'heroStatProjects', 'heroStatYears', 'heroStatClients', 'heroPhotoUrl', 'cvUrl', 'logoUrl',
-  'aboutHeadingLine1', 'aboutHeadingLine2', 'aboutParagraph1', 'aboutParagraph2',
+  'aboutHeadingLine1', 'aboutHeadingLine2', 'aboutParagraph1', 'aboutParagraph2', 'aboutParagraph3',
   'aboutImageUrl', 'aboutImageBlurDataUrl', 'aboutArtImageUrl', 'aboutArtImageBlurDataUrl',
   'contactHeadingLine1', 'contactHeadingLine2', 'contactSubtext', 'contactEmail',
   'githubUrl', 'linkedinUrl', 'instagramUrl', 'twitterUrl', 'whatsappUrl',
@@ -112,8 +114,8 @@ export async function PUT(request) {
     if (UPLOAD_FIELDS.includes(field)) {
       if (value === '') {
         data[field] = null;
-      } else if (!isValidUploadUrl(value)) {
-        return NextResponse.json({ error: 'CV must come from the upload field above.' }, { status: 400 });
+      } else if (!isValidCvUrl(value)) {
+        return NextResponse.json({ error: 'CV must be an uploaded PDF or a PDF in the site public folder, like /David-Fasinu-CV.pdf.' }, { status: 400 });
       } else {
         data[field] = value;
       }

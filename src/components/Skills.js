@@ -13,7 +13,7 @@ export default function Skills({ skills }) {
     <section className="skills" id="skills">
       <div className="container">
         <div className="section-head">
-          <span className="section-num">03 — Skills</span>
+          <span className="section-num">03 / Skills</span>
           <h2 className="section-title">What I work with</h2>
           <p>The languages, tools, and software I reach for most, grouped by discipline.</p>
         </div>

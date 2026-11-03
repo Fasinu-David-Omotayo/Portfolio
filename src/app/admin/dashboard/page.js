@@ -56,7 +56,7 @@ export default async function OverviewPage() {
       <div className="panel">
         <div className="panel-head">Recent Activity</div>
         {activity.length === 0 ? (
-          <div className="empty-panel">Nothing yet — activity will show up here as visitors use the site.</div>
+          <div className="empty-panel">Nothing yet - activity will show up here as visitors use the site.</div>
         ) : (
           activity.map((item) => (
             <div className="activity-item" key={item.id}>

@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
-const LINKS = [
+const ALL_LINKS = [
   { href: '#work', label: 'Work' },
   { href: '#about', label: 'About' },
   { href: '#skills', label: 'Skills' },
@@ -10,9 +10,11 @@ const LINKS = [
   { href: '#contact', label: 'Contact' },
 ];
 
-const SECTION_IDS = ['home', 'work', 'about', 'skills', 'testimonials', 'contact'];
+const ALL_SECTION_IDS = ['home', 'work', 'about', 'skills', 'testimonials', 'contact'];
 
-export default function Nav({ name, logoUrl }) {
+export default function Nav({ name, logoUrl, hasReviews = false }) {
+  const LINKS = hasReviews ? ALL_LINKS : ALL_LINKS.filter((l) => l.href !== '#testimonials');
+  const SECTION_IDS = hasReviews ? ALL_SECTION_IDS : ALL_SECTION_IDS.filter((id) => id !== 'testimonials');
   const [open, setOpen] = useState(false);
   const [light, setLight] = useState(false);
   const [activeId, setActiveId] = useState('home');

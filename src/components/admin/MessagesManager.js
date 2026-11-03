@@ -33,7 +33,7 @@ export default function MessagesManager({ initialMessages }) {
   if (messages.length === 0) {
     return (
       <div className="panel">
-        <div className="empty-panel">No messages yet — they&apos;ll show up here as visitors reach out.</div>
+        <div className="empty-panel">No messages yet - they&apos;ll show up here as visitors reach out.</div>
       </div>
     );
   }

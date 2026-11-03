@@ -140,7 +140,7 @@ export default function SettingsPage() {
 
       <div className="security-note">
         <b>Security note:</b> sessions last 7 days. Changing your password or email does not
-        automatically sign out other devices — if you suspect unauthorized access, change both
+        automatically sign out other devices - if you suspect unauthorized access, change both
         and redeploy with a new <b>JWT_SECRET</b> to invalidate every existing session.
       </div>
     </>

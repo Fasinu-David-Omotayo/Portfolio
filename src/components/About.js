@@ -14,9 +14,9 @@ export default function About({ content }) {
         >
           {content?.aboutImageUrl ? (
             <>
-              <img className="photo-img" src={content.aboutImageUrl} alt={content.heroName || 'Portrait'} />
+              <img className="photo-img" src={content.aboutImageUrl} alt={`Portrait of ${content.heroName || 'Fasinu David Omotayo'}`} />
               {content?.aboutArtImageUrl && (
-                <img className="art-img" src={content.aboutArtImageUrl} alt="" />
+                <img className="art-img" src={content.aboutArtImageUrl} alt={`${content.heroName || 'Portrait'}, illustrated version`} />
               )}
             </>
           ) : (
@@ -33,7 +33,7 @@ export default function About({ content }) {
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.5, delay: 0.1, ease: [0.2, 0.7, 0.3, 1] }}
         >
-          <span className="section-num">02 — About</span>
+          <span className="section-num">02 / About</span>
           <h2>
             {content?.aboutHeadingLine1 || 'The short version:'}
             <br />
@@ -41,12 +41,10 @@ export default function About({ content }) {
           </h2>
           <p>
             {content?.aboutParagraph1 ||
-              "I'm Fasinu David Omotayo — a software developer, graphic designer, and data analyst who likes working across all three rather than picking one."}
+              "I am Fasinu David Omotayo, a software developer, data analyst and designer based in Lagos."}
           </p>
-          <p>
-            {content?.aboutParagraph2 ||
-              'Whichever hat I\'m wearing, the approach is the same: understand the problem fully before touching code, a design tool, or a dataset.'}
-          </p>
+          {content?.aboutParagraph2 && <p>{content.aboutParagraph2}</p>}
+          {content?.aboutParagraph3 && <p>{content.aboutParagraph3}</p>}
         </motion.div>
       </div>
     </section>

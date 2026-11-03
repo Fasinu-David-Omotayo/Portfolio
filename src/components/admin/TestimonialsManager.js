@@ -128,14 +128,14 @@ export default function TestimonialsManager({ initialTestimonials }) {
       </div>
 
       {sorted.length === 0 ? (
-        <p style={{ color: 'var(--muted)', fontSize: 13.5 }}>No testimonials yet — add your first one above.</p>
+        <p style={{ color: 'var(--muted)', fontSize: 13.5 }}>No testimonials yet - add your first one above.</p>
       ) : (
         <div className="testimonial-admin-list">
           {sorted.map((t, i) => (
             <div className="testimonial-admin-row" key={t.id}>
               <div className="t-body">
                 <p className="t-quote">&ldquo;{t.quote}&rdquo;</p>
-                <span className="t-meta">{t.name} — {t.role}</span>
+                <span className="t-meta">{t.name} - {t.role}</span>
               </div>
               <div className="testimonial-admin-actions">
                 <button type="button" onClick={() => move(t, 'up')} disabled={i === 0} aria-label="Move up">↑</button>

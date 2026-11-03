@@ -41,7 +41,7 @@ export async function POST(request) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await request.json();
-  const { title, type, subCategory, description, techStack, liveUrl, githubUrl, imageUrl, thumbUrl, blurDataUrl, status, featured, problem, approach, result } = body;
+  const { title, type, subCategory, description, techStack, liveUrl, githubUrl, imageUrl, thumbUrl, blurDataUrl, status, featured, problem, approach, result, kind, kindNote, extraUrl, extraLabel } = body;
 
   if (!title || !type || !imageUrl) {
     return NextResponse.json({ error: 'Title, type, and image are required.' }, { status: 400 });
@@ -65,6 +65,18 @@ export async function POST(request) {
     if (value && value.length > 1000) {
       return NextResponse.json({ error: `${label} is too long (1000 characters max).` }, { status: 400 });
     }
+  }
+  if (kind !== undefined && !['', 'client', 'personal', 'concept'].includes(kind || '')) {
+    return NextResponse.json({ error: 'Invalid work label.' }, { status: 400 });
+  }
+  if (kindNote && kindNote.length > 300) {
+    return NextResponse.json({ error: 'Label note is too long (300 characters max).' }, { status: 400 });
+  }
+  if (extraLabel && extraLabel.length > 40) {
+    return NextResponse.json({ error: 'Extra link label is too long (40 characters max).' }, { status: 400 });
+  }
+  if (extraUrl && !isSafeHttpUrl(extraUrl)) {
+    return NextResponse.json({ error: 'Extra link must be a valid http:// or https:// link.' }, { status: 400 });
   }
   if (liveUrl && !isSafeHttpUrl(liveUrl)) {
     return NextResponse.json({ error: 'Live URL must be a valid http:// or https:// link.' }, { status: 400 });
@@ -90,6 +102,10 @@ export async function POST(request) {
       problem: problem ? problem.trim() : null,
       approach: approach ? approach.trim() : null,
       result: result ? result.trim() : null,
+      kind: kind || '',
+      kindNote: kindNote ? kindNote.trim() : null,
+      extraUrl: extraUrl || null,
+      extraLabel: extraLabel ? extraLabel.trim() : null,
     },
   });
 

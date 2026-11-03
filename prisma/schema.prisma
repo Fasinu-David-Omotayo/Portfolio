@@ -48,6 +48,15 @@ model Work {
   problem     String?
   approach    String?
   result      String?
+  // Honest labelling shown on the card and in the lightbox:
+  // "client" | "personal" | "concept" | "" (none). For "concept" work a
+  // short not-affiliated notice is shown; `kindNote` overrides its wording.
+  kind        String   @default("")
+  kindNote    String?
+  // One optional extra link with its own label, e.g. "Watch demo" or
+  // "Download workbook".
+  extraUrl    String?
+  extraLabel  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   images      WorkImage[]
@@ -84,12 +93,23 @@ model SiteContent {
   id Int @id @default(1)
 
   heroName        String @default("Fasinu David Omotayo")
-  heroRoles       String @default("Software Developer,Graphic Designer,Data Analyst") // comma-separated, rotates in the hero
+  heroRoles       String @default("Software Developer,Data Analyst,Graphic Designer") // used for SEO and the assistant; the hero shows heroHeadline
+  heroHeadline    String @default("Software developer, data analyst and designer based in Lagos.")
   heroTagline     String @default("I build, design, and make sense of things.")
-  heroSubtext     String @default("I write production software, design brand identities, and turn raw data into decisions worth acting on — all three, done properly.")
+  heroSubtext     String @default("I build responsive web products, design brand identities, and turn raw data into clear decisions. Open to entry-level and remote roles.")
+  // Legacy numeric stats (no longer shown; kept so old data is not dropped).
   heroStatProjects Int   @default(20)
   heroStatYears    Int   @default(2)
   heroStatClients  Int   @default(10)
+  // The four stat tiles under the hero: a big value and a small label each.
+  heroStat1Num    String @default("First Class")
+  heroStat1Label  String @default("Honours, Computer Science")
+  heroStat2Num    String @default("6 months")
+  heroStat2Label  String @default("at a working print press")
+  heroStat3Num    String @default("5")
+  heroStat3Label  String @default("selected projects")
+  heroStat4Num    String @default("3")
+  heroStat4Label  String @default("disciplines, one standard")
   cvUrl           String? // link to a hosted CV/resume PDF; the hero's "Download CV" button is hidden when this is empty
   logoUrl         String? // uploaded logo image shown in the nav; falls back to an initials monogram when empty
   heroPhotoUrl    String? // uploaded hero portrait photo; falls back to an inline illustration when empty
@@ -97,8 +117,9 @@ model SiteContent {
 
   aboutHeadingLine1 String @default("The short version:")
   aboutHeadingLine2 String @default("builder, designer, analyst.")
-  aboutParagraph1   String @default("I'm Fasinu David Omotayo — a software developer, graphic designer, and data analyst who likes working across all three rather than picking one.")
-  aboutParagraph2   String @default("Whichever hat I'm wearing, the approach is the same: understand the problem fully before touching code, a design tool, or a dataset.")
+  aboutParagraph1   String @default("I am Fasinu David Omotayo, a software developer, data analyst and designer based in Lagos. I graduated with First Class Honours in Computer Science, and I enjoy work where code, data and design meet.")
+  aboutParagraph2   String @default("I completed a six-month internship at a working print press, which taught me to deliver to a brief and a deadline. I am also training in cybersecurity, and it shapes how I build: access is protected and data is handled with care.")
+  aboutParagraph3   String @default("I am looking for entry-level and remote roles in web development or data analysis, where I can keep learning and ship useful work.")
   aboutImageUrl         String?
   aboutImageBlurDataUrl String?
   aboutArtImageUrl         String?

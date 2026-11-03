@@ -14,7 +14,7 @@ function displayUrl(url) {
 
 const PROJECT_TYPES = ['Software Development', 'Graphic Design', 'Data Analysis', 'Something else'];
 
-export default function Contact({ content }) {
+export default function Contact({ content, number = '04' }) {
   const [form, setForm] = useState({ name: '', email: '', projectType: '', message: '' });
   const [status, setStatus] = useState('idle'); // idle | sending | sent | error
   const [error, setError] = useState('');
@@ -65,7 +65,7 @@ export default function Contact({ content }) {
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.5, ease: [0.2, 0.7, 0.3, 1] }}
       >
-        <span className="section-num">05 — Contact</span>
+        <span className="section-num">{number} / Contact</span>
         <h2>
           {content?.contactHeadingLine1 || "Let's work"}
           <br />
@@ -152,7 +152,7 @@ export default function Contact({ content }) {
           {status === 'sending' ? 'Sending…' : 'Send Message'}
         </button>
 
-        {status === 'sent' && <p className="form-success">Thanks — your message is in. I&apos;ll reply soon.</p>}
+        {status === 'sent' && <p className="form-success">Thanks - your message is in. I&apos;ll reply soon.</p>}
         {status === 'error' && <p className="form-error">{error}</p>}
       </motion.form>
       </div>

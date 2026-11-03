@@ -1,18 +1,27 @@
-export default function Footer({ name }) {
+export default function Footer({ name, content }) {
   const year = new Date().getFullYear();
+  const links = [
+    content?.githubUrl && { label: 'GitHub', href: content.githubUrl },
+    content?.linkedinUrl && { label: 'LinkedIn', href: content.linkedinUrl },
+    content?.contactEmail && { label: 'Email', href: `mailto:${content.contactEmail}` },
+  ].filter(Boolean);
+
   return (
     <footer className="site-footer">
       <div className="container footer-inner">
         <div className="footer-left">
-          <span>© {year} {name || 'Fasinu David Omotayo'}</span>
-          <a href="/admin" className="footer-admin-link" aria-label="Studio login" title="Studio login">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="5" y="11" width="14" height="10" rx="1" />
-              <path d="M8 11V7a4 4 0 0 1 8 0v4" />
-            </svg>
-          </a>
+          <span>&copy; {year} {name || 'Fasinu David Omotayo'}</span>
         </div>
         <div className="footer-right">
+          {links.map((l) => (
+            <a
+              key={l.label}
+              href={l.href}
+              {...(l.label === 'Email' ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+            >
+              {l.label}
+            </a>
+          ))}
           <a href="#home">Back to top</a>
         </div>
       </div>

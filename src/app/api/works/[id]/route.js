@@ -20,7 +20,7 @@ export async function PUT(request, { params }) {
 
   const id = parseInt(params.id, 10);
   const body = await request.json();
-  const { title, type, subCategory, description, techStack, liveUrl, githubUrl, status, featured, imageUrl, thumbUrl, blurDataUrl, problem, approach, result } = body;
+  const { title, type, subCategory, description, techStack, liveUrl, githubUrl, status, featured, imageUrl, thumbUrl, blurDataUrl, problem, approach, result, kind, kindNote, extraUrl, extraLabel } = body;
 
   if (type !== undefined && !TYPES.includes(type)) {
     return NextResponse.json({ error: 'Invalid work type.' }, { status: 400 });
@@ -44,6 +44,18 @@ export async function PUT(request, { params }) {
     if (value && value.length > 1000) {
       return NextResponse.json({ error: `${label} is too long (1000 characters max).` }, { status: 400 });
     }
+  }
+  if (kind !== undefined && !['', 'client', 'personal', 'concept'].includes(kind || '')) {
+    return NextResponse.json({ error: 'Invalid work label.' }, { status: 400 });
+  }
+  if (kindNote && kindNote.length > 300) {
+    return NextResponse.json({ error: 'Label note is too long (300 characters max).' }, { status: 400 });
+  }
+  if (extraLabel && extraLabel.length > 40) {
+    return NextResponse.json({ error: 'Extra link label is too long (40 characters max).' }, { status: 400 });
+  }
+  if (extraUrl && !isSafeHttpUrl(extraUrl)) {
+    return NextResponse.json({ error: 'Extra link must be a valid http:// or https:// link.' }, { status: 400 });
   }
   if (liveUrl && !isSafeHttpUrl(liveUrl)) {
     return NextResponse.json({ error: 'Live URL must be a valid http:// or https:// link.' }, { status: 400 });
@@ -70,6 +82,10 @@ export async function PUT(request, { params }) {
       ...(problem !== undefined ? { problem: problem ? problem.trim() : null } : {}),
       ...(approach !== undefined ? { approach: approach ? approach.trim() : null } : {}),
       ...(result !== undefined ? { result: result ? result.trim() : null } : {}),
+      ...(kind !== undefined ? { kind: kind || '' } : {}),
+      ...(kindNote !== undefined ? { kindNote: kindNote ? kindNote.trim() : null } : {}),
+      ...(extraUrl !== undefined ? { extraUrl: extraUrl || null } : {}),
+      ...(extraLabel !== undefined ? { extraLabel: extraLabel ? extraLabel.trim() : null } : {}),
     },
   });
 

@@ -14,6 +14,7 @@ export const metadata = {
     apple: '/apple-icon.png',
   },
   metadataBase: new URL(SITE_URL),
+  alternates: { canonical: '/' },
   title: TITLE,
   description: DESCRIPTION,
   openGraph: {
