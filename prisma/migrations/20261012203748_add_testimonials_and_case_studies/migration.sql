@@ -1,65 +1,149 @@
--- Work labelling and an optional extra link
-ALTER TABLE "Work" ADD COLUMN "kind" TEXT NOT NULL DEFAULT '';
-ALTER TABLE "Work" ADD COLUMN "kindNote" TEXT;
-ALTER TABLE "Work" ADD COLUMN "extraUrl" TEXT;
-ALTER TABLE "Work" ADD COLUMN "extraLabel" TEXT;
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "name" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- Editable hero headline, stat tiles and a third About paragraph
-ALTER TABLE "SiteContent" ADD COLUMN "heroHeadline" TEXT NOT NULL DEFAULT 'Software developer, data analyst and designer based in Lagos.';
-ALTER TABLE "SiteContent" ADD COLUMN "heroStat1Num" TEXT NOT NULL DEFAULT 'First Class';
-ALTER TABLE "SiteContent" ADD COLUMN "heroStat1Label" TEXT NOT NULL DEFAULT 'Honours, Computer Science';
-ALTER TABLE "SiteContent" ADD COLUMN "heroStat2Num" TEXT NOT NULL DEFAULT '6 months';
-ALTER TABLE "SiteContent" ADD COLUMN "heroStat2Label" TEXT NOT NULL DEFAULT 'at a working print press';
-ALTER TABLE "SiteContent" ADD COLUMN "heroStat3Num" TEXT NOT NULL DEFAULT '5';
-ALTER TABLE "SiteContent" ADD COLUMN "heroStat3Label" TEXT NOT NULL DEFAULT 'selected projects';
-ALTER TABLE "SiteContent" ADD COLUMN "heroStat4Num" TEXT NOT NULL DEFAULT '3';
-ALTER TABLE "SiteContent" ADD COLUMN "heroStat4Label" TEXT NOT NULL DEFAULT 'disciplines, one standard';
-ALTER TABLE "SiteContent" ADD COLUMN "aboutParagraph3" TEXT NOT NULL DEFAULT 'I am looking for entry-level and remote roles in web development or data analysis, where I can keep learning and ship useful work.';
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
--- Replace the existing public copy with the corrected, provable wording.
--- Everything below stays editable from Admin > Site Content.
-UPDATE "SiteContent" SET
-  "heroSubtext" = 'I build responsive web products, design brand identities, and turn raw data into clear decisions. Open to entry-level and remote roles.',
-  "aboutParagraph1" = 'I am Fasinu David Omotayo, a software developer, data analyst and designer based in Lagos. I graduated with First Class Honours in Computer Science, and I enjoy work where code, data and design meet.',
-  "aboutParagraph2" = 'I completed a six-month internship at a working print press, which taught me to deliver to a brief and a deadline. I am also training in cybersecurity, and it shapes how I build: access is protected and data is handled with care.',
-  "heroRoles" = 'Software Developer,Data Analyst,Graphic Designer',
-  "whatsappUrl" = '2348024505354'
-WHERE "id" = 1;
+-- CreateTable
+CREATE TABLE "Work" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "subCategory" TEXT,
+    "description" TEXT,
+    "techStack" TEXT,
+    "liveUrl" TEXT,
+    "githubUrl" TEXT,
+    "imageUrl" TEXT NOT NULL,
+    "thumbUrl" TEXT NOT NULL,
+    "blurDataUrl" TEXT,
+    "status" TEXT NOT NULL DEFAULT 'live',
+    "views" INTEGER NOT NULL DEFAULT 0,
+    "featured" BOOLEAN NOT NULL DEFAULT false,
+    "order" INTEGER NOT NULL DEFAULT 0,
+    "problem" TEXT,
+    "approach" TEXT,
+    "result" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
--- Remove em dashes from any existing public text
-UPDATE "SiteContent" SET
-  "contactSubtext" = REPLACE("contactSubtext", ' — ', ', '),
-  "aboutHeadingLine1" = REPLACE("aboutHeadingLine1", ' — ', ', '),
-  "aboutHeadingLine2" = REPLACE("aboutHeadingLine2", ' — ', ', '),
-  "heroTagline" = REPLACE("heroTagline", ' — ', ', ')
-WHERE "id" = 1;
-UPDATE "Work" SET
-  "description" = REPLACE("description", ' — ', ', '),
-  "problem" = REPLACE("problem", ' — ', ', '),
-  "approach" = REPLACE("approach", ' — ', ', '),
-  "result" = REPLACE("result", ' — ', ', ');
+    CONSTRAINT "Work_pkey" PRIMARY KEY ("id")
+);
 
--- Skill spelling
-UPDATE "Skill" SET "name" = 'Adobe Illustrator' WHERE LOWER("name") = 'adobe illustrator';
-UPDATE "Skill" SET "name" = 'CorelDRAW' WHERE LOWER(REPLACE("name", ' ', '')) = 'coreldraw';
+-- CreateTable
+CREATE TABLE "WorkImage" (
+    "id" SERIAL NOT NULL,
+    "workId" INTEGER NOT NULL,
+    "imageUrl" TEXT NOT NULL,
+    "blurDataUrl" TEXT,
+    "order" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- Missing skills, placed in the same category as a related skill you already
--- have (or a sensible default). Skipped if a skill with that name exists.
-INSERT INTO "Skill" ("category", "name", "order")
-SELECT COALESCE((SELECT "category" FROM "Skill" WHERE LOWER("name") = 'excel' LIMIT 1), 'Data & Analytics'), 'Power Query', 90
-WHERE NOT EXISTS (SELECT 1 FROM "Skill" WHERE LOWER("name") = 'power query');
-INSERT INTO "Skill" ("category", "name", "order")
-SELECT COALESCE((SELECT "category" FROM "Skill" WHERE LOWER("name") = 'excel' LIMIT 1), 'Data & Analytics'), 'Pivot Tables', 91
-WHERE NOT EXISTS (SELECT 1 FROM "Skill" WHERE LOWER("name") = 'pivot tables');
-INSERT INTO "Skill" ("category", "name", "order")
-SELECT COALESCE((SELECT "category" FROM "Skill" WHERE LOWER("name") = 'javascript' LIMIT 1), 'Languages'), 'TypeScript', 90
-WHERE NOT EXISTS (SELECT 1 FROM "Skill" WHERE LOWER("name") = 'typescript');
-INSERT INTO "Skill" ("category", "name", "order")
-SELECT COALESCE((SELECT "category" FROM "Skill" WHERE LOWER("name") IN ('react', 'next.js') LIMIT 1), 'Frameworks'), 'Tailwind CSS', 90
-WHERE NOT EXISTS (SELECT 1 FROM "Skill" WHERE LOWER("name") = 'tailwind css');
-INSERT INTO "Skill" ("category", "name", "order")
-SELECT COALESCE((SELECT "category" FROM "Skill" WHERE LOWER("name") IN ('react', 'next.js') LIMIT 1), 'Frameworks'), 'Three.js', 91
-WHERE NOT EXISTS (SELECT 1 FROM "Skill" WHERE LOWER("name") = 'three.js');
-INSERT INTO "Skill" ("category", "name", "order")
-SELECT 'Security', 'Cybersecurity (learning)', 0
-WHERE NOT EXISTS (SELECT 1 FROM "Skill" WHERE LOWER("name") LIKE 'cybersecurity%');
+    CONSTRAINT "WorkImage_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Skill" (
+    "id" SERIAL NOT NULL,
+    "category" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "order" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "Skill_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SiteContent" (
+    "id" INTEGER NOT NULL DEFAULT 1,
+    "heroName" TEXT NOT NULL DEFAULT 'Fasinu David Omotayo',
+    "heroRoles" TEXT NOT NULL DEFAULT 'Software Developer,Graphic Designer,Data Analyst',
+    "heroTagline" TEXT NOT NULL DEFAULT 'I build, design, and make sense of things.',
+    "heroSubtext" TEXT NOT NULL DEFAULT 'I write production software, design brand identities, and turn raw data into decisions worth acting on — all three, done properly.',
+    "heroStatProjects" INTEGER NOT NULL DEFAULT 20,
+    "heroStatYears" INTEGER NOT NULL DEFAULT 2,
+    "heroStatClients" INTEGER NOT NULL DEFAULT 10,
+    "cvUrl" TEXT,
+    "logoUrl" TEXT,
+    "heroPhotoUrl" TEXT,
+    "heroPhotoBlurDataUrl" TEXT,
+    "aboutHeadingLine1" TEXT NOT NULL DEFAULT 'The short version:',
+    "aboutHeadingLine2" TEXT NOT NULL DEFAULT 'builder, designer, analyst.',
+    "aboutParagraph1" TEXT NOT NULL DEFAULT 'I''m Fasinu David Omotayo — a software developer, graphic designer, and data analyst who likes working across all three rather than picking one.',
+    "aboutParagraph2" TEXT NOT NULL DEFAULT 'Whichever hat I''m wearing, the approach is the same: understand the problem fully before touching code, a design tool, or a dataset.',
+    "aboutImageUrl" TEXT,
+    "aboutImageBlurDataUrl" TEXT,
+    "aboutArtImageUrl" TEXT,
+    "aboutArtImageBlurDataUrl" TEXT,
+    "contactHeadingLine1" TEXT NOT NULL DEFAULT 'Let''s work',
+    "contactHeadingLine2" TEXT NOT NULL DEFAULT 'together.',
+    "contactSubtext" TEXT NOT NULL DEFAULT 'Open to software, design, and data projects. Fill out the form or reach out directly.',
+    "contactEmail" TEXT NOT NULL DEFAULT 'hello@fasinudavid.com',
+    "githubUrl" TEXT,
+    "linkedinUrl" TEXT,
+    "instagramUrl" TEXT,
+    "twitterUrl" TEXT,
+    "whatsappUrl" TEXT,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "SiteContent_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Testimonial" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "role" TEXT NOT NULL,
+    "quote" TEXT NOT NULL,
+    "order" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Testimonial_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ContactMessage" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "projectType" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "read" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "ContactMessage_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Activity" (
+    "id" SERIAL NOT NULL,
+    "type" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "meta" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Activity_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE INDEX "Work_status_type_idx" ON "Work"("status", "type");
+
+-- CreateIndex
+CREATE INDEX "Work_createdAt_idx" ON "Work"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "WorkImage_workId_idx" ON "WorkImage"("workId");
+
+-- CreateIndex
+CREATE INDEX "Activity_type_createdAt_idx" ON "Activity"("type", "createdAt");
+
+-- AddForeignKey
+ALTER TABLE "WorkImage" ADD CONSTRAINT "WorkImage_workId_fkey" FOREIGN KEY ("workId") REFERENCES "Work"("id") ON DELETE CASCADE ON UPDATE CASCADE;
