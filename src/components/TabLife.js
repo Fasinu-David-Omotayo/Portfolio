@@ -6,13 +6,9 @@ import { useEffect } from 'react';
 export default function TabLife() {
   useEffect(() => {
     const original = document.title;
-    const away = 'Come back, Dee misses you 👋';
+    const away = 'Come back, Dee misses you';
     function onVisibility() {
-      if (document.hidden) {
-        document.title = away;
-      } else {
-        document.title = original;
-      }
+      document.title = document.hidden ? away : original;
     }
     document.addEventListener('visibilitychange', onVisibility);
     return () => {
