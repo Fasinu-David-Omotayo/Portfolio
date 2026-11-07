@@ -180,7 +180,7 @@ export default function ContentEditor({ initialContent }) {
         <input value={form.heroName} onChange={(e) => set('heroName', e.target.value)} maxLength={300} />
       </div>
       <div className="mgroup">
-        <label>Roles (comma-separated, typed out in the hero after "I'm a")</label>
+        <label>Roles (comma-separated, typed out one by one in the hero)</label>
         <input value={form.heroRoles} onChange={(e) => set('heroRoles', e.target.value)} maxLength={300} />
       </div>
       <div className="mgroup">
